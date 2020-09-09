@@ -37,7 +37,7 @@ from inference import Network
 HOSTNAME = socket.gethostname()
 IPADDRESS = socket.gethostbyname(HOSTNAME)
 MQTT_HOST = IPADDRESS
-MQTT_PORT = 1884
+MQTT_PORT = 3001
 MQTT_KEEPALIVE_INTERVAL = 60
 
 
@@ -189,14 +189,16 @@ def main():
             cv2.putText(frame, inf_time_message, (15, 15),
                         cv2.FONT_HERSHEY_COMPLEX, 0.5, (200, 10, 10), 1)
 
-            # When new person enters the video
-            if current_count > last_count:
-                start_time = time.time()
+             # Person enters video - frame stops counting people but not time
+                if current_count > last_count and in_counter == 0:
+                if current_count < last_count:
+                if in_counter > threshold_frame_count (50):
+                start_time = time.time(aus)
                 total_count = total_count + current_count - last_count
                 client.publish("person", json.dumps({"total": total_count}))
 
             # Person duration in the video is calculated
-            if current_count < last_count:
+            if current_count < last_count:  #####or should the loop if in_counter > threshold_frame_count (50) - go here??###### 
                 duration = int(time.time() - start_time)
                 # Publish messages to the MQTT server
                 client.publish("person/duration",
